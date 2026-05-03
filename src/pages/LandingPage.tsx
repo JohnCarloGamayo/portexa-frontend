@@ -1,5 +1,7 @@
 import { Send, Code, Palette, PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import headerLogo from '../assets/icons-branding/Portexa-lightbg.png';
+import footerLogo from '../assets/icons-branding/Portexa-darkbg.png';
 import { motion, type Variants } from 'framer-motion';
 
 const fadeInUp: Variants = {
@@ -28,10 +30,7 @@ const LandingPage = () => {
         <div className="flex items-center gap-12">
           <Link to="/" className="flex flex-col gap-0.5 hover:opacity-80 transition cursor-pointer">
             <div className="flex items-center gap-2">
-               <div className="w-6 h-6 bg-brand-600 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
-                 <div className="w-3 h-3 border-2 border-white rounded-sm border-t-transparent animate-spin-slow"></div>
-               </div>
-               <span className="text-xl font-bold tracking-tight text-slate-900">Portexa AI</span>
+               <img src={headerLogo} alt="Portexa" className="w-36 h-auto object-contain" />
             </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-500">
@@ -308,10 +307,7 @@ const LandingPage = () => {
          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
             <div className="max-w-xs space-y-6">
               <div className="flex items-center gap-2">
-                 <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
-                   <div className="w-4 h-4 border-2 border-white rounded-sm border-t-transparent"></div>
-                 </div>
-                 <div className="text-2xl font-bold text-white tracking-tight">Portexa AI</div>
+                 <img src={footerLogo} alt="Portexa" className="w-20 h-auto object-contain" />
               </div>
               <p className="text-sm leading-relaxed font-medium">
                 Transforming static professional profiles into dynamic, interactive AI experiences since 2024.

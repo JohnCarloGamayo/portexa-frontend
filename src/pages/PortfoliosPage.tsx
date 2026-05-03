@@ -354,6 +354,7 @@ const PortfoliosPage = () => {
   const [manualInfoEntries, setManualInfoEntries] = useState<ManualInfoEntry[]>([createManualInfoEntry()]);
   const [deleteConfirmationId, setDeleteConfirmationId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isConfirmingPortfolio, setIsConfirmingPortfolio] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -517,6 +518,42 @@ const PortfoliosPage = () => {
       setErrorMessage(err instanceof Error ? err.message : 'An error occurred while deleting');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const confirmAndCreatePortfolio = async () => {
+    if (!activeResumeId) {
+      setErrorMessage('Select or upload a resume first before creating a portfolio.');
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setErrorMessage('Your session has expired. Please login again.');
+      return;
+    }
+
+    setIsConfirmingPortfolio(true);
+    setErrorMessage('');
+    try {
+      const response = await fetch(`${API_BASE}/resumes/${activeResumeId}/activate`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const detail = await response.json().catch(() => null) as { detail?: string } | null;
+        throw new Error(detail?.detail || 'Unable to activate resume for portfolio creation');
+      }
+
+      await reloadLibrary();
+      setUploadMessage('Portfolio confirmed. This resume is now your active RAG source.');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Unable to confirm portfolio right now.');
+    } finally {
+      setIsConfirmingPortfolio(false);
     }
   };
 
@@ -849,6 +886,7 @@ const PortfoliosPage = () => {
                       type="button"
                       onClick={() => {
                         const nextIndex = toResumeIndexFromLibraryItem(item);
+                        setActiveResumeId(item.id);
                         setResumeIndex(nextIndex);
                         setCollections(getCollectionsFromIndex(nextIndex));
                         setUploadMessage(`Loaded ${item.fileName} from your saved AI library.`);
@@ -988,9 +1026,10 @@ const PortfoliosPage = () => {
               <button
                 type="button"
                 className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] transition mt-8 disabled:opacity-70"
-                disabled={isProcessing}
+                disabled={isProcessing || isConfirmingPortfolio}
+                onClick={() => void confirmAndCreatePortfolio()}
               >
-                {isProcessing ? 'Indexing...' : 'Confirm & Create Portfolio'}
+                {isProcessing ? 'Indexing...' : isConfirmingPortfolio ? 'Confirming...' : 'Confirm & Create Portfolio'}
               </button>
             </div>
           </div>

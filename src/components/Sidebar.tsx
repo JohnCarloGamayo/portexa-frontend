@@ -1,5 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, FileText, BarChart2, Key, Settings, Plus, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import sidebarExpandedLogo from '../assets/icons-branding/Portexa-lightbg.png';
+import sidebarCollapsedLogo from '../assets/icons-branding/portexa-icon-removebg.png';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 
@@ -58,12 +60,12 @@ const Sidebar = ({
         )}>
           <Link to="/" className={clsx("flex flex-col gap-1 hover:opacity-80 transition cursor-pointer", isCollapsed ? "items-center" : "")}>
             <div className="flex items-center gap-2">
-               <div className="w-8 h-8 bg-brand-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm relative group text-white">
-                  <div className="w-4 h-4 border-2 border-white rounded-sm border-t-transparent animate-spin-slow"></div>
-               </div>
-               {!isCollapsed && <span className="text-xl font-bold tracking-tight text-slate-900">Portexa AI</span>}
+               {isCollapsed ? (
+                 <img src={sidebarCollapsedLogo} alt="Portexa" className="w-8 h-8 object-contain" />
+               ) : (
+                 <img src={sidebarExpandedLogo} alt="Portexa" className="w-28 h-auto object-contain" />
+               )}
             </div>
-            {!isCollapsed && <span className="text-xs text-slate-500 font-medium tracking-wide border-t border-slate-200/50 pt-1 mt-1 inline-block w-fit">Intelligent Assistant</span>}
           </Link>
 
           {!isCollapsed && (
